@@ -33,7 +33,7 @@ const HeroSection = () => {
       // Fallback hardcoded
       setProfile({
         id: 1,
-        name: "Jonathan",
+        name: "Jonathan Venancio",
         title: "Analista de Segurança da Informação",
         subtitle: "Protegendo sistemas, analisando vulnerabilidades",
         tagline: "Protegendo sistemas, analisando vulnerabilidades",
