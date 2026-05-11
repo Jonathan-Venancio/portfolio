@@ -1,11 +1,10 @@
 from sqladmin import Admin, ModelView
-from fastapi import FastAPI, Request, File, UploadFile, HTTPException
-from fastapi.responses import JSONResponse
+from sqladmin.authentication import AuthenticationBackend
+from starlette.requests import Request
+from starlette.responses import RedirectResponse, Response
 from database import engine
 from models import Profile, Category, Project, Contact, Skill
-import os
-import uuid
-from pathlib import Path
+import auth
 
 
 class ProfileAdmin(ModelView, model=Profile):
@@ -39,10 +38,40 @@ class SkillAdmin(ModelView, model=Skill):
     form_columns = [Skill.name, Skill.level, Skill.is_active]
 
 
-def setup_admin(app: FastAPI):
-    authentication_backend = None  # Sem autenticação por enquanto
+class AdminAuth(AuthenticationBackend):
+    async def login(self, request: Request) -> bool:
+        form = await request.form()
+        username = form.get("username")
+        password = form.get("password")
+        
+        # Verifica se ambos username e senha estão corretos
+        if (username == auth.ADMIN_USERNAME and 
+            auth.ADMIN_PASSWORD_HASH and 
+            auth.verify_password(password, auth.ADMIN_PASSWORD_HASH)):
+            # Salva na sessão
+            request.session.update({"admin": True})
+            return True
+        
+        return False
+
+    async def logout(self, request: Request) -> bool:
+        request.session.clear()
+        return True
+
+    async def authenticate(self, request: Request) -> bool:
+        # Verifica se está logado
+        return "admin" in request.session
+
+
+def setup_admin(app):
+    authentication_backend = AdminAuth(secret_key="some-secret-key")
     
-    admin = Admin(app=app, engine=engine, authentication_backend=authentication_backend, base_url="/admin")
+    admin = Admin(
+        app=app, 
+        engine=engine, 
+        authentication_backend=authentication_backend, 
+        base_url="/admin"
+    )
     
     admin.add_view(ProfileAdmin)
     admin.add_view(CategoryAdmin)

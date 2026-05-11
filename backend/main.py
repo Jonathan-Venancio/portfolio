@@ -1,6 +1,7 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from sqlalchemy.orm import Session
 from database import engine, get_db
 from models import Base, Profile, Category, Project, Contact, Skill
@@ -8,9 +9,15 @@ from schemas import ProfileCreate, CategoryCreate, ProjectCreate, ContactCreate,
 import crud
 import json
 import admin
+import auth
+import auth_middleware
 import os
 import uuid
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Carregar variáveis de ambiente
+load_dotenv()
 
 # Create uploads directory
 UPLOAD_DIR = Path("uploads")
@@ -21,13 +28,30 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Portfolio API", version="1.0.0")
 
+# Configurar credenciais do admin via variáveis de ambiente
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin123")
+
+# Validação de segurança
+if not ADMIN_USERNAME or not ADMIN_PASSWORD:
+    raise ValueError("ADMIN_USERNAME e ADMIN_PASSWORD devem ser configurados nas variáveis de ambiente")
+
+auth.ADMIN_USERNAME = ADMIN_USERNAME
+auth.ADMIN_PASSWORD_HASH = auth.hash_password(ADMIN_PASSWORD)
+
 # Serve static files
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000", "http://localhost:8080"],  # Vite default ports
+    allow_origins=[
+        "http://localhost:5173", 
+        "http://localhost:3000", 
+        "http://localhost:8080",  # Vite default ports
+        "https://jonathanvenancio.site",  # Produção frontend
+        "http://jonathanvenancio.site"    # HTTP fallback
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
