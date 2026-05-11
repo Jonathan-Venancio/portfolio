@@ -1,8 +1,65 @@
 import { motion } from "framer-motion";
 import { Shield, ChevronDown } from "lucide-react";
+import { useState, useEffect } from "react";
 import profileImg from "@/assets/profile.png";
 
+interface Profile {
+  id: number;
+  name: string;
+  title: string;
+  subtitle: string;
+  tagline: string;
+  email: string;
+  profile_image?: string;
+}
+
 const HeroSection = () => {
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/profile');
+      if (response.ok) {
+        const data = await response.json();
+        setProfile(data);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar perfil:', error);
+      // Fallback hardcoded
+      setProfile({
+        id: 1,
+        name: "Jonathan",
+        title: "Analista de Segurança da Informação",
+        subtitle: "Protegendo sistemas, analisando vulnerabilidades",
+        tagline: "Protegendo sistemas, analisando vulnerabilidades",
+        email: "jonathan@email.com",
+        profile_image: null
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="text-muted-foreground">Carregando...</div>
+      </section>
+    );
+  }
+
+  if (!profile) {
+    return null;
+  }
+
+  const [firstName, lastName] = profile.name.split(' ');
+  const profileImageUrl = profile.profile_image || profileImg;
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Scanline overlay */}
@@ -22,7 +79,13 @@ const HeroSection = () => {
           className="relative"
         >
           <div className="w-40 h-40 rounded-full overflow-hidden border-2 border-primary neon-border">
-            <img src={profileImg} alt="Jonathan Venancio" className="w-full h-full object-cover" width={512} height={512} />
+            <img 
+              src={profileImageUrl} 
+              alt={profile.name} 
+              className="w-full h-full object-cover" 
+              width={512} 
+              height={512} 
+            />
           </div>
           <div className="absolute -bottom-2 -right-2 bg-primary rounded-full p-2">
             <Shield className="w-5 h-5 text-primary-foreground" />
@@ -39,14 +102,14 @@ const HeroSection = () => {
             &gt; whoami
           </p>
           <h1 className="text-4xl md:text-6xl font-heading font-bold text-foreground">
-            Jonathan <span className="text-primary neon-text">Venancio</span>
+            {firstName} <span className="text-primary neon-text">{lastName}</span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto font-body">
-            Analista de Segurança da Informação
+            {profile.title}
           </p>
           <div className="flex items-center justify-center gap-2 font-mono text-sm text-muted-foreground">
             <span className="inline-block w-2 h-2 rounded-full bg-primary animate-pulse-neon" />
-            Protegendo sistemas, analisando vulnerabilidades
+            {profile.tagline}
           </div>
         </motion.div>
 

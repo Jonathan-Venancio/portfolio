@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from database import engine, get_db
 from models import Base, Profile, Category, Project, Contact
@@ -7,11 +8,21 @@ from schemas import ProfileCreate, CategoryCreate, ProjectCreate, ContactCreate
 import crud
 import json
 import admin
+import os
+import uuid
+from pathlib import Path
+
+# Create uploads directory
+UPLOAD_DIR = Path("uploads")
+UPLOAD_DIR.mkdir(exist_ok=True)
 
 # Create tables
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Portfolio API", version="1.0.0")
+
+# Serve static files
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 # CORS middleware
 app.add_middleware(
@@ -32,6 +43,37 @@ app.include_router(contacts.router)
 
 # Setup admin panel
 admin.setup_admin(app)
+
+
+@app.get("/upload-profile-page")
+async def upload_profile_page():
+    from fastapi.responses import HTMLResponse
+    with open("upload_page.html", "r", encoding="utf-8") as f:
+        content = f.read()
+    return HTMLResponse(content=content)
+
+@app.post("/upload-profile-image/")
+async def upload_profile_image(file: UploadFile = File(...)):
+    # Validate file type
+    if not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="File must be an image")
+    
+    # Generate unique filename
+    file_extension = file.filename.split(".")[-1] if file.filename else "jpg"
+    unique_filename = f"{uuid.uuid4()}.{file_extension}"
+    file_path = UPLOAD_DIR / unique_filename
+    
+    # Save file
+    try:
+        with open(file_path, "wb") as buffer:
+            content = await file.read()
+            buffer.write(content)
+        
+        # Return the URL
+        file_url = f"/uploads/{unique_filename}"
+        return {"filename": unique_filename, "url": file_url}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error uploading file: {str(e)}")
 
 
 @app.on_event("startup")

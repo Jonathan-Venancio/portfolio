@@ -11,6 +11,7 @@ class Profile(Base):
     subtitle = Column(String, nullable=False)
     tagline = Column(String, nullable=False)
     email = Column(String, nullable=False)
+    profile_image = Column(String, nullable=True)  # URL or path to profile image
 
 
 class Category(Base):

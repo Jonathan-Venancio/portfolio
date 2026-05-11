@@ -9,6 +9,7 @@ class ProfileBase(BaseModel):
     subtitle: str
     tagline: str
     email: str
+    profile_image: Optional[str] = None
 
 
 class ProfileCreate(ProfileBase):

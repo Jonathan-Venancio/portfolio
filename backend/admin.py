@@ -1,13 +1,17 @@
 from sqladmin import Admin, ModelView
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, File, UploadFile, HTTPException
+from fastapi.responses import JSONResponse
 from database import engine
 from models import Profile, Category, Project, Contact
+import os
+import uuid
+from pathlib import Path
 
 
 class ProfileAdmin(ModelView, model=Profile):
-    column_list = [Profile.id, Profile.name, Profile.title, Profile.email]
+    column_list = [Profile.id, Profile.name, Profile.title, Profile.email, Profile.profile_image]
     column_searchable_list = [Profile.name, Profile.title]
-    form_columns = [Profile.name, Profile.title, Profile.subtitle, Profile.tagline, Profile.email]
+    form_columns = [Profile.name, Profile.title, Profile.subtitle, Profile.tagline, Profile.email, Profile.profile_image]
 
 
 class CategoryAdmin(ModelView, model=Category):
