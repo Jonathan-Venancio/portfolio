@@ -99,6 +99,24 @@ class Contact(ContactBase):
         from_attributes = True
 
 
+# Skill Schemas
+class SkillBase(BaseModel):
+    name: str
+    level: int
+
+class SkillCreate(SkillBase):
+    pass
+
+class SkillUpdate(SkillBase):
+    pass
+
+class Skill(SkillBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+
 # Response Schemas
 class ProjectsByCategory(BaseModel):
     category: Category

@@ -3,8 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from database import engine, get_db
-from models import Base, Profile, Category, Project, Contact
-from schemas import ProfileCreate, CategoryCreate, ProjectCreate, ContactCreate
+from models import Base, Profile, Category, Project, Contact, Skill
+from schemas import ProfileCreate, CategoryCreate, ProjectCreate, ContactCreate, SkillCreate
 import crud
 import json
 import admin
@@ -34,12 +34,13 @@ app.add_middleware(
 )
 
 # Include routers
-from routers import profile, categories, projects, contacts
+from routers import profile, categories, projects, contacts, skills
 
 app.include_router(profile.router)
 app.include_router(categories.router)
 app.include_router(projects.router)
 app.include_router(contacts.router)
+app.include_router(skills.router)
 
 # Setup admin panel
 admin.setup_admin(app)
@@ -230,6 +231,37 @@ def startup_event():
         ]
         for contact_data in contacts_data:
             crud.create_contact(db, contact_data)
+    
+    # Seed skills if not exists
+    if not db.query(Skill).first():
+        skills_data = [
+            SkillCreate(
+                name="Pentest & Ethical Hacking",
+                level=90
+            ),
+            SkillCreate(
+                name="Análise de Vulnerabilidades",
+                level=85
+            ),
+            SkillCreate(
+                name="SIEM & Monitoramento",
+                level=80
+            ),
+            SkillCreate(
+                name="Firewall & Redes",
+                level=85
+            ),
+            SkillCreate(
+                name="Python & Automação",
+                level=75
+            ),
+            SkillCreate(
+                name="Compliance (ISO 27001, LGPD)",
+                level=80
+            )
+        ]
+        for skill_data in skills_data:
+            crud.create_skill(db, skill_data)
     
     db.close()
 

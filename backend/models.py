@@ -45,3 +45,12 @@ class Contact(Base):
     icon = Column(String, nullable=False)
     url = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
+
+
+class Skill(Base):
+    __tablename__ = "skills"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    level = Column(Integer, nullable=False)  # Percentage from 0 to 100
+    is_active = Column(Boolean, default=True)

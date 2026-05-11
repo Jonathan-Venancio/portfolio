@@ -2,7 +2,7 @@ from sqladmin import Admin, ModelView
 from fastapi import FastAPI, Request, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 from database import engine
-from models import Profile, Category, Project, Contact
+from models import Profile, Category, Project, Contact, Skill
 import os
 import uuid
 from pathlib import Path
@@ -33,6 +33,12 @@ class ContactAdmin(ModelView, model=Contact):
     form_columns = [Contact.label, Contact.icon, Contact.url, Contact.is_active]
 
 
+class SkillAdmin(ModelView, model=Skill):
+    column_list = [Skill.id, Skill.name, Skill.level, Skill.is_active]
+    column_searchable_list = [Skill.name]
+    form_columns = [Skill.name, Skill.level, Skill.is_active]
+
+
 def setup_admin(app: FastAPI):
     authentication_backend = None  # Sem autenticação por enquanto
     
@@ -42,5 +48,6 @@ def setup_admin(app: FastAPI):
     admin.add_view(CategoryAdmin)
     admin.add_view(ProjectAdmin)
     admin.add_view(ContactAdmin)
+    admin.add_view(SkillAdmin)
     
     return admin

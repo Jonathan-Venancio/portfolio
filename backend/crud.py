@@ -1,7 +1,11 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.orm import declarative_base
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from database import SessionLocal, engine
 import json
-from models import Profile, Category, Project, Contact
-from schemas import ProfileCreate, ProfileUpdate, CategoryCreate, CategoryUpdate, ProjectCreate, ProjectUpdate, ContactCreate, ContactUpdate
+from models import Profile, Category, Project, Contact, Skill
+from schemas import ProfileCreate, ProfileUpdate, CategoryCreate, CategoryUpdate, ProjectCreate, ProjectUpdate, ContactCreate, ContactUpdate, SkillCreate
 
 
 # Profile CRUD
@@ -145,3 +149,38 @@ def delete_contact(db: Session, contact_id: int):
         db_contact.is_active = False
         db.commit()
     return db_contact
+
+
+# Skill CRUD
+def get_skills(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(Skill).filter(Skill.is_active == True).offset(skip).limit(limit).all()
+
+
+def get_skill(db: Session, skill_id: int):
+    return db.query(Skill).filter(Skill.id == skill_id, Skill.is_active == True).first()
+
+
+def create_skill(db: Session, skill: SkillCreate):
+    db_skill = Skill(**skill.model_dump())
+    db.add(db_skill)
+    db.commit()
+    db.refresh(db_skill)
+    return db_skill
+
+
+def update_skill(db: Session, skill_id: int, skill_update):
+    db_skill = db.query(Skill).filter(Skill.id == skill_id).first()
+    if db_skill:
+        for key, value in skill_update.model_dump(exclude_unset=True).items():
+            setattr(db_skill, key, value)
+        db.commit()
+        db.refresh(db_skill)
+    return db_skill
+
+
+def delete_skill(db: Session, skill_id: int):
+    db_skill = db.query(Skill).filter(Skill.id == skill_id).first()
+    if db_skill:
+        db_skill.is_active = False
+        db.commit()
+    return db_skill

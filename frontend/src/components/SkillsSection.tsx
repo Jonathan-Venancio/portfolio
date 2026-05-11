@@ -1,15 +1,64 @@
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 
-const skills = [
-  { name: "Pentest & Ethical Hacking", level: 90 },
-  { name: "Análise de Vulnerabilidades", level: 85 },
-  { name: "SIEM & Monitoramento", level: 80 },
-  { name: "Firewall & Redes", level: 85 },
-  { name: "Python & Automação", level: 75 },
-  { name: "Compliance (ISO 27001, LGPD)", level: 80 },
-];
+interface Skill {
+  id: number;
+  name: string;
+  level: number;
+  is_active: boolean;
+}
 
 const SkillsSection = () => {
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchSkills();
+  }, []);
+
+  const fetchSkills = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/skills');
+      if (response.ok) {
+        const data = await response.json();
+        const activeSkills = data.filter((skill: Skill) => skill.is_active !== false);
+        setSkills(activeSkills);
+      } else {
+        // Fallback hardcoded
+        setSkills([
+          { id: 1, name: "Pentest & Ethical Hacking", level: 90, is_active: true },
+          { id: 2, name: "Análise de Vulnerabilidades", level: 85, is_active: true },
+          { id: 3, name: "SIEM & Monitoramento", level: 80, is_active: true },
+          { id: 4, name: "Firewall & Redes", level: 85, is_active: true },
+          { id: 5, name: "Python & Automação", level: 75, is_active: true },
+          { id: 6, name: "Compliance (ISO 27001, LGPD)", level: 80, is_active: true },
+        ]);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar habilidades:', error);
+      // Fallback hardcoded
+      setSkills([
+        { id: 1, name: "Pentest & Ethical Hacking", level: 90, is_active: true },
+        { id: 2, name: "Análise de Vulnerabilidades", level: 85, is_active: true },
+        { id: 3, name: "SIEM & Monitoramento", level: 80, is_active: true },
+        { id: 4, name: "Firewall & Redes", level: 85, is_active: true },
+        { id: 5, name: "Python & Automação", level: 75, is_active: true },
+        { id: 6, name: "Compliance (ISO 27001, LGPD)", level: 80, is_active: true },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+  if (loading) {
+    return (
+      <section className="py-24 px-4" id="skills">
+        <div className="container max-w-3xl text-center">
+          <div className="text-muted-foreground">Carregando habilidades...</div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-24 px-4" id="skills">
       <div className="container max-w-3xl">
@@ -26,31 +75,37 @@ const SkillsSection = () => {
         </motion.div>
 
         <div className="space-y-6">
-          {skills.map((skill, i) => (
-            <motion.div
-              key={skill.name}
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="space-y-2"
-            >
-              <div className="flex justify-between text-sm">
-                <span className="font-mono text-foreground">{skill.name}</span>
-                <span className="font-mono text-primary">{skill.level}%</span>
-              </div>
-              <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                <motion.div
-                  initial={{ width: 0 }}
-                  whileInView={{ width: `${skill.level}%` }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1, delay: i * 0.08 + 0.3, ease: "easeOut" }}
-                  className="h-full bg-primary rounded-full"
-                  style={{ boxShadow: "0 0 10px hsl(152 100% 50% / 0.5)" }}
-                />
-              </div>
-            </motion.div>
-          ))}
+          {skills.length > 0 ? (
+            skills.map((skill, i) => (
+              <motion.div
+                key={skill.id}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="space-y-2"
+              >
+                <div className="flex justify-between text-sm">
+                  <span className="font-mono text-foreground">{skill.name}</span>
+                  <span className="font-mono text-primary">{skill.level}%</span>
+                </div>
+                <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${skill.level}%` }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, delay: i * 0.08 + 0.3, ease: "easeOut" }}
+                    className="h-full bg-primary rounded-full"
+                    style={{ boxShadow: "0 0 10px hsl(152 100% 50% / 0.5)" }}
+                  />
+                </div>
+              </motion.div>
+            ))
+          ) : (
+            <div className="text-center text-muted-foreground">
+              Nenhuma habilidade encontrada.
+            </div>
+          )}
         </div>
       </div>
     </section>
