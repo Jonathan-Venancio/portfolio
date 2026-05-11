@@ -70,7 +70,9 @@ def setup_admin(app):
         app=app, 
         engine=engine, 
         authentication_backend=authentication_backend, 
-        base_url="/admin"
+        base_url="/admin",
+        templates_dir="templates",
+        static_url_path="/admin/static"
     )
     
     admin.add_view(ProfileAdmin)

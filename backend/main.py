@@ -42,6 +42,10 @@ auth.ADMIN_PASSWORD_HASH = auth.hash_password(ADMIN_PASSWORD)
 # Serve static files
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
+# Serve SQLAdmin static files
+from sqladmin.staticfiles import StaticFiles as SQLAdminStaticFiles
+app.mount("/admin/static", SQLAdminStaticFiles(directory="static"), name="admin-static")
+
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
