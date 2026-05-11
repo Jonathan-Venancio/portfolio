@@ -1,0 +1,30 @@
+# Backend .dockerignore
+backend/.git
+backend/.gitignore
+backend/.env
+backend/.env.example
+backend/__pycache__
+backend/*.pyc
+backend/*.pyo
+backend/*.pyd
+backend/venv
+backend/env
+backend/.venv
+backend/node_modules
+backend/uploads/*
+!uploads/.gitkeep
+
+# Frontend .dockerignore
+frontend/.git
+frontend/.gitignore
+frontend/node_modules
+frontend/dist
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend.DS_Store

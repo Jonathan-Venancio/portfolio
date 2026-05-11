@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: portfolio-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-Beifong}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-09080706Ga}
+    volumes:
+      - ./backend/uploads:/app/uploads
+    restart: unless-stopped
+    networks:
+      - portfolio-network
+
+  frontend:
+    build: ./frontend
+    container_name: portfolio-frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - portfolio-network
+
+networks:
+  portfolio-network:
+    driver: bridge
