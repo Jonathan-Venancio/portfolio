@@ -42,9 +42,6 @@ auth.ADMIN_PASSWORD_HASH = auth.hash_password(ADMIN_PASSWORD)
 # Serve static files
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
-# Serve admin static files
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
