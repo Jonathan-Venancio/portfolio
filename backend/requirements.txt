@@ -3,6 +3,8 @@ uvicorn[standard]
 sqlalchemy
 pydantic
 pydantic-settings
-sqladmin
 itsdangerous
 python-dotenv
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
