@@ -117,15 +117,22 @@ const ProjectsAdmin: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Tem certeza que deseja excluir este projeto?')) return;
+    console.log('handleDelete called with id:', id);
+    if (!confirm('Tem certeza que deseja excluir este projeto?')) {
+      console.log('Delete cancelled by user');
+      return;
+    }
 
+    console.log('Attempting to delete project:', id);
     try {
       const response = await fetch(`${API_URL}/api/admin/projects/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
 
+      console.log('Delete response status:', response.status);
       if (response.ok) {
+        console.log('Delete successful, refreshing projects');
         fetchProjects();
       } else {
         const errorData = await response.json().catch(() => ({}));

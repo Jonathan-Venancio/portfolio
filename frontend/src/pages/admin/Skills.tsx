@@ -78,15 +78,22 @@ const SkillsAdmin: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Tem certeza que deseja excluir esta skill?')) return;
+    console.log('handleDelete called with id:', id);
+    if (!confirm('Tem certeza que deseja excluir esta skill?')) {
+      console.log('Delete cancelled by user');
+      return;
+    }
 
+    console.log('Attempting to delete skill:', id);
     try {
       const response = await fetch(`${API_URL}/api/admin/skills/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
 
+      console.log('Delete response status:', response.status);
       if (response.ok) {
+        console.log('Delete successful, refreshing skills');
         fetchSkills();
       } else {
         const errorData = await response.json().catch(() => ({}));
