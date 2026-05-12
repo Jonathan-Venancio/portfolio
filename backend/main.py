@@ -68,7 +68,7 @@ app.include_router(admin.router)
 # Rota de login para obter token JWT
 @app.post("/api/admin/login")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    if form_data.username != ADMIN_USERNAME or not auth.verify_password(form_data.password, ADMIN_PASSWORD):
+    if form_data.username != ADMIN_USERNAME or form_data.password != ADMIN_PASSWORD:
         raise HTTPException(
             status_code=401,
             detail="Usuário ou senha incorretos",
