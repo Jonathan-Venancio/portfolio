@@ -59,7 +59,8 @@ const HeroSection = () => {
   }
 
   const [firstName, lastName] = profile.name.split(' ');
-  const profileImageUrl = profile.profile_image || profileImg;
+  const API_URL = import.meta.env.VITE_API_URL || 'https://back.jonathanvenancio.site';
+  const profileImageUrl = profile.profile_image ? `${API_URL}${profile.profile_image}` : profileImg;
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">

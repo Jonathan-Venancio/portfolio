@@ -10,7 +10,7 @@ interface Profile {
   subtitle: string;
   tagline: string;
   email: string;
-  image_url?: string;
+  profile_image?: string;
 }
 
 const ProfileAdmin: React.FC = () => {
@@ -93,7 +93,7 @@ const ProfileAdmin: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setProfile({ ...profile, image_url: data.url });
+        setProfile({ ...profile, profile_image: data.url });
         setMessage('Imagem enviada com sucesso!');
       }
     } catch (error) {
@@ -179,9 +179,9 @@ const ProfileAdmin: React.FC = () => {
                 accept="image/*"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              {profile.image_url && (
+              {profile.profile_image && (
                 <img
-                  src={`${API_URL}${profile.image_url}`}
+                  src={`${API_URL}${profile.profile_image}`}
                   alt="Profile"
                   className="mt-4 w-32 h-32 object-cover rounded-md"
                 />
