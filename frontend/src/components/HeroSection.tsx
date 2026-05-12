@@ -23,7 +23,8 @@ const HeroSection = () => {
 
   const fetchProfile = async () => {
     try {
-      const response = await fetch('http://localhost:8000/profile');
+      const API_URL = import.meta.env.VITE_API_URL || 'https://back.jonathanvenancio.site';
+      const response = await fetch(`${API_URL}/profile`);
       if (response.ok) {
         const data = await response.json();
         setProfile(data);

@@ -34,8 +34,9 @@ const ProjectsSection = () => {
 
   const fetchData = async () => {
     try {
+      const API_URL = import.meta.env.VITE_API_URL || 'https://back.jonathanvenancio.site';
       // Fetch categories
-      const categoriesResponse = await fetch('http://localhost:8000/categories');
+      const categoriesResponse = await fetch(`${API_URL}/categories`);
       if (categoriesResponse.ok) {
         const categoriesData = await categoriesResponse.json();
         const activeCategories = categoriesData.filter((cat: Category) => cat.is_active);
@@ -43,7 +44,7 @@ const ProjectsSection = () => {
         // Fetch projects for each category
         const categoriesWithProjects = await Promise.all(
           activeCategories.map(async (category: Category) => {
-            const projectsResponse = await fetch(`http://localhost:8000/projects/by-category/${category.id}`);
+            const projectsResponse = await fetch(`${API_URL}/projects/by-category/${category.id}`);
             if (projectsResponse.ok) {
               const projectsData = await projectsResponse.json();
               return {

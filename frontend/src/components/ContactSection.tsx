@@ -20,7 +20,8 @@ const ContactSection = () => {
 
   const fetchContacts = async () => {
     try {
-      const response = await fetch('http://localhost:8000/contacts');
+      const API_URL = import.meta.env.VITE_API_URL || 'https://back.jonathanvenancio.site';
+      const response = await fetch(`${API_URL}/contacts`);
       if (response.ok) {
         const data = await response.json();
         setContacts(data.filter((contact: Contact) => contact.is_active));

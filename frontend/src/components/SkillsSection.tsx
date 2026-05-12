@@ -18,7 +18,8 @@ const SkillsSection = () => {
 
   const fetchSkills = async () => {
     try {
-      const response = await fetch('http://localhost:8000/skills');
+      const API_URL = import.meta.env.VITE_API_URL || 'https://back.jonathanvenancio.site';
+      const response = await fetch(`${API_URL}/skills`);
       if (response.ok) {
         const data = await response.json();
         const activeSkills = data.filter((skill: Skill) => skill.is_active !== false);
