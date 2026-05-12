@@ -110,7 +110,7 @@ const ProjectsAdmin: React.FC = () => {
       title: project.title,
       description: project.description,
       icon: project.icon,
-      tags: project.tags.join(', '),
+      tags: Array.isArray(project.tags) ? project.tags.join(', ') : project.tags || '',
       category_id: project.category_id.toString(),
     });
     setShowModal(true);
@@ -168,7 +168,9 @@ const ProjectsAdmin: React.FC = () => {
                 <td className="px-6 py-4 whitespace-nowrap">
                   {categories.find(c => c.id === project.category_id)?.name || '-'}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">{project.tags.join(', ')}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {Array.isArray(project.tags) ? project.tags.join(', ') : project.tags || ''}
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <button
                     onClick={() => handleEdit(project)}
