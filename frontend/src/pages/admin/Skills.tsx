@@ -88,9 +88,14 @@ const SkillsAdmin: React.FC = () => {
 
       if (response.ok) {
         fetchSkills();
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Error deleting skill:', response.status, errorData);
+        alert('Erro ao excluir skill. Verifique o console para detalhes.');
       }
     } catch (error) {
       console.error('Error deleting skill:', error);
+      alert('Erro ao excluir skill. Verifique o console para detalhes.');
     }
   };
 

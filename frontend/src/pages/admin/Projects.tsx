@@ -127,9 +127,14 @@ const ProjectsAdmin: React.FC = () => {
 
       if (response.ok) {
         fetchProjects();
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Error deleting project:', response.status, errorData);
+        alert('Erro ao excluir projeto. Verifique o console para detalhes.');
       }
     } catch (error) {
       console.error('Error deleting project:', error);
+      alert('Erro ao excluir projeto. Verifique o console para detalhes.');
     }
   };
 
