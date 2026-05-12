@@ -51,7 +51,7 @@ async def upload_profile_image(file: UploadFile = File(...), current_user: str =
 # Categories CRUD
 @router.get("/categories")
 async def get_admin_categories(db: Session = Depends(get_db), current_user: str = Depends(auth.get_current_user)):
-    return db.query(Category).all()
+    return db.query(Category).filter(Category.is_active == True).all()
 
 @router.post("/categories")
 async def create_admin_category(category: CategoryCreate, db: Session = Depends(get_db), current_user: str = Depends(auth.get_current_user)):
@@ -68,7 +68,7 @@ async def delete_admin_category(category_id: int, db: Session = Depends(get_db),
 # Projects CRUD
 @router.get("/projects")
 async def get_admin_projects(db: Session = Depends(get_db), current_user: str = Depends(auth.get_current_user)):
-    return db.query(Project).all()
+    return db.query(Project).filter(Project.is_active == True).all()
 
 @router.post("/projects")
 async def create_admin_project(project: ProjectCreate, db: Session = Depends(get_db), current_user: str = Depends(auth.get_current_user)):
@@ -85,7 +85,7 @@ async def delete_admin_project(project_id: int, db: Session = Depends(get_db), c
 # Skills CRUD
 @router.get("/skills")
 async def get_admin_skills(db: Session = Depends(get_db), current_user: str = Depends(auth.get_current_user)):
-    return db.query(Skill).all()
+    return db.query(Skill).filter(Skill.is_active == True).all()
 
 @router.post("/skills")
 async def create_admin_skill(skill: SkillCreate, db: Session = Depends(get_db), current_user: str = Depends(auth.get_current_user)):
@@ -102,7 +102,7 @@ async def delete_admin_skill(skill_id: int, db: Session = Depends(get_db), curre
 # Contacts CRUD
 @router.get("/contacts")
 async def get_admin_contacts(db: Session = Depends(get_db), current_user: str = Depends(auth.get_current_user)):
-    return db.query(Contact).all()
+    return db.query(Contact).filter(Contact.is_active == True).all()
 
 @router.post("/contacts")
 async def create_admin_contact(contact: ContactCreate, db: Session = Depends(get_db), current_user: str = Depends(auth.get_current_user)):
