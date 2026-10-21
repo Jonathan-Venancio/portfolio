@@ -11,8 +11,9 @@ DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_PORT = os.getenv("DB_PORT", "5432")
 
 if DB_HOST and DB_NAME and DB_USER and DB_PASSWORD:
-    # PostgreSQL for production
-    SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    # PostgreSQL for production. SQLAlchemy 2.1 trata postgresql:// como psycopg 3;
+    # o projeto instala psycopg2-binary, então o driver precisa ir explícito na URL.
+    SQLALCHEMY_DATABASE_URL = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     engine = create_engine(SQLALCHEMY_DATABASE_URL)
 else:
     # SQLite for local development
