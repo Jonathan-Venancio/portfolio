@@ -10,11 +10,17 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first for better caching
-COPY requirements.txt .
+ENV POETRY_VERSION=2.4.1 \
+    POETRY_VIRTUALENVS_CREATE=false \
+    POETRY_NO_INTERACTION=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir "poetry==${POETRY_VERSION}"
+
+# Copy dependency files first for better caching
+COPY pyproject.toml poetry.lock ./
+
+RUN poetry install --only main --no-root --no-ansi
 
 # Copy application code
 COPY . .

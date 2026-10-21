@@ -4,25 +4,24 @@ Backend FastAPI com SQLite para gerenciamento dinâmico do portfolio.
 
 ## Instalação
 
-```bash
-# Criar ambiente virtual (opcional)
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# ou
-venv\Scripts\activate  # Windows
+As dependências são gerenciadas com [Poetry](https://python-poetry.org/). É preciso Python 3.12 ou superior.
 
-# Instalar dependências
-pip install -r requirements.txt
+```bash
+# Instalar dependências (cria o ambiente virtual em .venv)
+poetry install
+
+# Opcional: entrar no ambiente virtual
+eval $(poetry env activate)
 ```
 
 ## Executar
 
 ```bash
 # Modo desenvolvimento (com auto-reload)
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+poetry run uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 # Modo produção
-uvicorn main:app --host 0.0.0.0 --port 8000
+poetry run uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
 ## Documentação
@@ -79,10 +78,7 @@ Para mudar para PostgreSQL, edite `database.py`:
 SQLALCHEMY_DATABASE_URL = "postgresql://user:password@localhost/dbname"
 ```
 
-E instale o driver:
-```bash
-pip install psycopg2-binary
-```
+O driver `psycopg2-binary` já faz parte das dependências do Poetry.
 
 ## CORS
 
@@ -107,6 +103,7 @@ backend/
 │   ├── categories.py
 │   ├── projects.py
 │   └── contacts.py
-├── requirements.txt     # Dependências
+├── pyproject.toml       # Dependências (Poetry)
+├── poetry.lock          # Versões travadas
 └── README.md           # Este arquivo
 ```
