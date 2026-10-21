@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Integer, String, Text, Boolean
+from datetime import datetime, timezone
+
+from sqlalchemy import Column, DateTime, Integer, String, Text, Boolean
 from database import Base
 
 
@@ -54,3 +56,13 @@ class Skill(Base):
     name = Column(String, nullable=False)
     level = Column(Integer, nullable=False)  # Percentage from 0 to 100
     is_active = Column(Boolean, default=True)
+
+
+class Message(Base):
+    __tablename__ = "messages"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    email = Column(String, nullable=False)
+    message = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)

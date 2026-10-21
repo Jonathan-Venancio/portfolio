@@ -59,14 +59,9 @@ Após iniciar o servidor, acesse:
 - `PUT /contacts/{id}` - Atualizar contato
 - `DELETE /contacts/{id}` - Desativar contato (soft delete)
 
-## Seed Data
+## Conteúdo inicial
 
-Ao iniciar a aplicação pela primeira vez, os seguintes dados são criados automaticamente:
-
-- **Profile**: Jonathan Venancio (com dados do frontend atual)
-- **Categories**: Segurança, Programação, Ciência de Dados
-- **Projects**: 11 projetos distribuídos nas 3 categorias
-- **Contacts**: Email, LinkedIn, GitHub
+Ao iniciar, a API alinha o conteúdo público com os repositórios reais documentados no projeto. Projetos placeholder antigos permanecem no banco, apenas inativos. A página pública descreve os projetos em `frontend/src/content/site.ts`.
 
 ## Banco de Dados
 
@@ -105,5 +100,6 @@ backend/
 │   └── contacts.py
 ├── pyproject.toml       # Dependências (Poetry)
 ├── poetry.lock          # Versões travadas
+├── portfolio_content.py # Conteúdo público alinhado aos repositórios reais
 └── README.md           # Este arquivo
 ```

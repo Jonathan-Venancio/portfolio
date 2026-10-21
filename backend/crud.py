@@ -4,8 +4,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database import SessionLocal, engine
 import json
-from models import Profile, Category, Project, Contact, Skill
-from schemas import ProfileCreate, ProfileUpdate, CategoryCreate, CategoryUpdate, ProjectCreate, ProjectUpdate, ContactCreate, ContactUpdate, SkillCreate
+from models import Profile, Category, Project, Contact, Skill, Message
+from schemas import ProfileCreate, ProfileUpdate, CategoryCreate, CategoryUpdate, ProjectCreate, ProjectUpdate, ContactCreate, ContactUpdate, SkillCreate, MessageCreate
 
 
 # Profile CRUD
@@ -184,3 +184,15 @@ def delete_skill(db: Session, skill_id: int):
         db_skill.is_active = False
         db.commit()
     return db_skill
+
+
+def create_message(db: Session, message: MessageCreate):
+    db_message = Message(name=message.name.strip(), email=message.email.strip(), message=message.message.strip())
+    db.add(db_message)
+    db.commit()
+    db.refresh(db_message)
+    return db_message
+
+
+def get_messages(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(Message).order_by(Message.created_at.desc()).offset(skip).limit(limit).all()

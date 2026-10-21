@@ -47,8 +47,7 @@ const education = [
 
 const JourneySection = () => {
   return (
-    <section id="trajetoria" className="py-24 relative overflow-hidden">
-      {/* Background grid */}
+    <section id="trajetoria" className="py-24 relative overflow-hidden scroll-mt-20">
       <div className="absolute inset-0 opacity-[0.02]" style={{
         backgroundImage: `linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)`,
         backgroundSize: '60px 60px'
@@ -73,9 +72,7 @@ const JourneySection = () => {
           </p>
         </motion.div>
 
-        {/* Timeline */}
         <div className="relative max-w-5xl mx-auto">
-          {/* Center vertical line */}
           <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-0.5 md:-translate-x-1/2 bg-gradient-to-b from-primary/70 via-primary/50 to-primary/20 z-0" />
 
           {journeySteps.map((step, index) => {
@@ -91,7 +88,6 @@ const JourneySection = () => {
                 transition={{ duration: 0.5, delay: index * 0.12 }}
                 className="relative mb-12 last:mb-0"
               >
-                {/* Node on the line - vertically centered with card */}
                 <div className="absolute left-6 md:left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex items-center justify-center">
                   <div className={`relative w-5 h-5 rounded-full bg-background border-2 ${isLast ? 'border-primary neon-border' : 'border-primary/70'}`}>
                     <span className="absolute inset-1 rounded-full bg-primary/60" />
@@ -101,7 +97,6 @@ const JourneySection = () => {
                   </div>
                 </div>
 
-                {/* Card row */}
                 <div className={`flex md:items-start ${isLeft ? 'md:justify-start' : 'md:justify-end'}`}>
                   <div className={`pl-16 md:pl-0 w-full md:w-[calc(50%-2.5rem)] ${isLeft ? 'md:pr-10 md:text-right' : 'md:pl-10 md:text-left'}`}>
                     <div className={`bg-card/60 backdrop-blur-sm border rounded-lg p-5 transition-all duration-300 hover:border-primary/60 hover:bg-card/80 ${isLast ? 'border-primary/50 shadow-[0_0_30px_-10px_hsl(var(--primary)/0.4)]' : 'border-border'}`}>
@@ -129,7 +124,6 @@ const JourneySection = () => {
           })}
         </div>
 
-        {/* Education section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -165,7 +159,6 @@ const JourneySection = () => {
           </div>
         </motion.div>
 
-        {/* Summary text */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -176,10 +169,10 @@ const JourneySection = () => {
           <div className="p-6 bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 border border-primary/20 rounded-lg">
             <p className="font-mono text-primary text-sm mb-4">&gt; echo $RESUMO</p>
             <p className="text-muted-foreground font-body leading-relaxed">
-              Combinando minha formação em <span className="text-primary">Ciência de Dados</span> com experiência 
-              prática em <span className="text-primary">desenvolvimento de software</span>, trago uma visão 
-              única para a <span className="text-primary">Segurança da Informação</span>. Entendo tanto o 
-              código quanto os dados que ele processa, permitindo identificar vulnerabilidades que outros 
+              Combinando minha formação em <span className="text-primary">Ciência de Dados</span> com experiência
+              prática em <span className="text-primary">desenvolvimento de software</span>, trago uma visão
+              única para a <span className="text-primary">Segurança da Informação</span>. Entendo tanto o
+              código quanto os dados que ele processa, permitindo identificar vulnerabilidades que outros
               podem ignorar.
             </p>
           </div>

@@ -14,6 +14,7 @@ import ProjectsAdmin from "./pages/admin/Projects";
 import SkillsAdmin from "./pages/admin/Skills";
 import CategoriesAdmin from "./pages/admin/Categories";
 import ContactsAdmin from "./pages/admin/Contacts";
+import MessagesAdmin from "./pages/admin/Messages";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ const App = () => (
               <Route path="skills" element={<SkillsAdmin />} />
               <Route path="categories" element={<CategoriesAdmin />} />
               <Route path="contacts" element={<ContactsAdmin />} />
+              <Route path="messages" element={<MessagesAdmin />} />
               <Route index element={<Navigate to="/admin/dashboard" replace />} />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

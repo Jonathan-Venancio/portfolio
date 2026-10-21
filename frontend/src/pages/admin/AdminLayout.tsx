@@ -19,6 +19,7 @@ const AdminLayout: React.FC = () => {
     { path: '/admin/skills', label: 'Skills', icon: '💡' },
     { path: '/admin/categories', label: 'Categorias', icon: '📁' },
     { path: '/admin/contacts', label: 'Contatos', icon: '📞' },
+    { path: '/admin/messages', label: 'Mensagens', icon: '✉️' },
   ];
 
   return (

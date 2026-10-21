@@ -1,112 +1,45 @@
-import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
-
-interface Skill {
-  id: number;
-  name: string;
-  level: number;
-  is_active: boolean;
-}
+import { projects, skillGroups } from "@/content/site";
+import SectionHeading from "@/components/SectionHeading";
 
 const SkillsSection = () => {
-  const [skills, setSkills] = useState<Skill[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchSkills();
-  }, []);
-
-  const fetchSkills = async () => {
-    try {
-      const API_URL = import.meta.env.VITE_API_URL || 'https://back.jonathanvenancio.site';
-      const response = await fetch(`${API_URL}/skills`);
-      if (response.ok) {
-        const data = await response.json();
-        const activeSkills = data.filter((skill: Skill) => skill.is_active !== false);
-        setSkills(activeSkills);
-      } else {
-        // Fallback hardcoded
-        setSkills([
-          { id: 1, name: "Pentest & Ethical Hacking", level: 90, is_active: true },
-          { id: 2, name: "Análise de Vulnerabilidades", level: 85, is_active: true },
-          { id: 3, name: "SIEM & Monitoramento", level: 80, is_active: true },
-          { id: 4, name: "Firewall & Redes", level: 85, is_active: true },
-          { id: 5, name: "Python & Automação", level: 75, is_active: true },
-          { id: 6, name: "Compliance (ISO 27001, LGPD)", level: 80, is_active: true },
-        ]);
-      }
-    } catch (error) {
-      console.error('Erro ao buscar habilidades:', error);
-      // Fallback hardcoded
-      setSkills([
-        { id: 1, name: "Pentest & Ethical Hacking", level: 90, is_active: true },
-        { id: 2, name: "Análise de Vulnerabilidades", level: 85, is_active: true },
-        { id: 3, name: "SIEM & Monitoramento", level: 80, is_active: true },
-        { id: 4, name: "Firewall & Redes", level: 85, is_active: true },
-        { id: 5, name: "Python & Automação", level: 75, is_active: true },
-        { id: 6, name: "Compliance (ISO 27001, LGPD)", level: 80, is_active: true },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
-  if (loading) {
-    return (
-      <section className="py-24 px-4" id="skills">
-        <div className="container max-w-3xl text-center">
-          <div className="text-muted-foreground">Carregando habilidades...</div>
-        </div>
-      </section>
-    );
-  }
-
   return (
-    <section className="py-24 px-4" id="skills">
-      <div className="container max-w-3xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-16"
-        >
-          <p className="font-mono text-primary text-sm tracking-widest mb-2">&gt; cat skills.conf</p>
-          <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground">
-            Habilidades
-          </h2>
-        </motion.div>
+    <section id="competencias" className="py-24 px-4 scroll-mt-20">
+      <div className="container max-w-5xl">
+        <SectionHeading
+          eyebrow="> cat competencias.txt"
+          title="Competências"
+          description="Sem porcentagens. Cada item indica de onde vem a prática. O que não está publicado não aparece como domínio."
+        />
 
-        <div className="space-y-6">
-          {skills.length > 0 ? (
-            skills.map((skill, i) => (
-              <motion.div
-                key={skill.id}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                className="space-y-2"
-              >
-                <div className="flex justify-between text-sm">
-                  <span className="font-mono text-foreground">{skill.name}</span>
-                  <span className="font-mono text-primary">{skill.level}%</span>
+        <div className="grid md:grid-cols-2 gap-6">
+          {skillGroups.map((group) => {
+            const related = projects.find((project) => project.slug === group.projectSlug);
+            return (
+              <article key={group.id} className="bg-card border border-border rounded-lg p-6 flex flex-col gap-4">
+                <div>
+                  <h3 className="font-heading text-lg text-foreground">{group.name}</h3>
+                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{group.description}</p>
                 </div>
-                <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${skill.level}%` }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1, delay: i * 0.08 + 0.3, ease: "easeOut" }}
-                    className="h-full bg-primary rounded-full"
-                    style={{ boxShadow: "0 0 10px hsl(152 100% 50% / 0.5)" }}
-                  />
-                </div>
-              </motion.div>
-            ))
-          ) : (
-            <div className="text-center text-muted-foreground">
-              Nenhuma habilidade encontrada.
-            </div>
-          )}
+                {group.items.length > 0 ? (
+                  <ul className="space-y-3">
+                    {group.items.map((item) => (
+                      <li key={item.name}>
+                        <p className="text-sm text-foreground">{item.name}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{item.context}</p>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-muted-foreground">Nenhuma competência publicada nesta categoria.</p>
+                )}
+                {related ? (
+                  <a href="#projetos" className="font-mono text-sm text-primary hover:underline mt-auto">
+                    Ver {related.title}
+                  </a>
+                ) : null}
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

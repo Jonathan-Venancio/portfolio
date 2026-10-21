@@ -17,7 +17,6 @@ const SkillsAdmin: React.FC = () => {
   const [editingSkill, setEditingSkill] = useState<Skill | null>(null);
   const [formData, setFormData] = useState({
     name: '',
-    level: 50,
   });
 
   useEffect(() => {
@@ -54,13 +53,13 @@ const SkillsAdmin: React.FC = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ name: formData.name, level: 0 }),
       });
 
       if (response.ok) {
         setShowModal(false);
         setEditingSkill(null);
-        setFormData({ name: '', level: 50 });
+        setFormData({ name: '' });
         fetchSkills();
       }
     } catch (error) {
@@ -72,7 +71,6 @@ const SkillsAdmin: React.FC = () => {
     setEditingSkill(skill);
     setFormData({
       name: skill.name,
-      level: skill.level,
     });
     setShowModal(true);
   };
@@ -115,7 +113,7 @@ const SkillsAdmin: React.FC = () => {
         <button
           onClick={() => {
             setEditingSkill(null);
-            setFormData({ name: '', level: 50 });
+            setFormData({ name: '' });
             setShowModal(true);
           }}
           className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
@@ -129,8 +127,6 @@ const SkillsAdmin: React.FC = () => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nível</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progresso</th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
             </tr>
           </thead>
@@ -138,15 +134,6 @@ const SkillsAdmin: React.FC = () => {
             {skills.map((skill) => (
               <tr key={skill.id}>
                 <td className="px-6 py-4 whitespace-nowrap">{skill.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{skill.level}%</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="w-full bg-gray-200 rounded-full h-2.5">
-                    <div
-                      className="bg-blue-600 h-2.5 rounded-full"
-                      style={{ width: `${skill.level}%` }}
-                    ></div>
-                  </div>
-                </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <button
                     onClick={() => handleEdit(skill)}
@@ -185,17 +172,9 @@ const SkillsAdmin: React.FC = () => {
                     required
                   />
                 </div>
-                <div>
-                  <label className="block text-gray-700 font-medium mb-2">Nível: {formData.level}%</label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    value={formData.level}
-                    onChange={(e) => setFormData({ ...formData, level: parseInt(e.target.value) })}
-                    className="w-full"
-                  />
-                </div>
+                <p className="text-sm text-gray-500">
+                  A página pública organiza as competências por categoria e não exibe porcentagem.
+                </p>
               </div>
               <div className="mt-6 flex justify-end space-x-4">
                 <button

@@ -115,3 +115,8 @@ async def update_admin_contact(contact_id: int, contact: ContactCreate, db: Sess
 @router.delete("/contacts/{contact_id}")
 async def delete_admin_contact(contact_id: int, db: Session = Depends(get_db), current_user: str = Depends(auth.get_current_user)):
     return crud.delete_contact(db, contact_id)
+
+
+@router.get("/messages")
+async def get_admin_messages(db: Session = Depends(get_db), current_user: str = Depends(auth.get_current_user)):
+    return crud.get_messages(db)
